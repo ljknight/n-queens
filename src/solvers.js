@@ -39,100 +39,66 @@ window.findNRooksSolution = function(n) {
 
 
 window.countNRooksSolutions = function(n) {
+
+  var chess = new Board({n:4});
+  var rows = chess.rows();
   var solutionCount = 0;
+  var rowIndex = 0;
 
-  for (var row = 0; row < 4; row++) {
-    var chess = new Board({n:4});
-    var solution = chess.rows();
+  var rowTemp = 0;
+  var colTemp = 0;
+  var boardCreate = function(rowInput) {
+    var currentRow = chess.get(rowTemp);
 
-    var column = 0;
-
-    //assign 1
-    var firstCase = solution[0][0] = 1;
-
-    var innerFunc = function() {
-      var innerCol = 0;
-      for (var i = 0; i < n; i++) {
-        if (!chess.hasAnyRooksConflicts()) {
-          chess.togglePiece(rowSquare, colSquare)      
-        }
-      }
-    };
-
-
-
-
-
-  //   for (var row = 0; row < solution.length; row++) {
-  //     for (var col = 0; col < solution[row].length; col++) {
-  //       solution[row][col] = 1;
-  //       if (chess.hasAnyRooksConflicts()) {
-  //         chess.togglePiece(row, col)
-  //     }
-  //   }
-  // }
-
-  for loop with max of n 
-    create a new board
-    place your first piece at position a1
-    inner function ()
-      check for conflict at each box after a1
-      if no conflict
-        place the next available piece
-        recursion for next piece
-
-      if (continue this until you hit the nth piece on the Board
-      when you do:
-        increment counter++
-          increment the col++
-        do it again
-        until col === n // or n -1
-        return;
-      return count   
-
-
-
-
-
-
-  var newBoard = function() {
-    chess = new Board({n:4});
-    this.solution = chess.rows();
-    this.children = [];
-  };
-
-  var parentBoard = new newBoard();
-
-  var boardCreate = function() {
-    
-    // base case
-      // if we hit the bottom right side
-        // return 
-
-    var childBoard = new newBoard();
-    
-    for (var row = 0; row < childBoard.solution.length; row++) {
-      for (var col = 0; col < childBoard.solution[row].length; col++) {
-        childBoard.solution[row][col] = 1;
-        if (chess.hasAnyRooksConflicts()) {
+    // adds our pieces
+    for (var row = rowTemp; row < currentRow.length; row++) {
+      for (var col = 0; col < currentRow.length; col++) {
+        if (currentRow[col] === 1) {
           chess.togglePiece(row, col)
+        } else {
+          chess.togglePiece(row, col);
+          if (chess.hasAnyRooksConflicts()) {
+            chess.togglePiece(row, col);
+          }
+        }
+        if (solutionCount === 6) {
+          return;
+        }
+        if (row === currentRow.length-1 && col === currentRow.length-1) {
+          solutionCount++;
+          rowTemp = row-1;
+          boardCreate(rowTemp);
         }
       }
     }
-    parentBoard.children.push(childBoard);
-    return parentBoard
-  };
+    return;
+  }
+  boardCreate(0);
 
-  console.log(boardCreate()) 
+    // if () {
+    //   reset rowTemp back to zero
+    // }
+    // if () {
+    //   boardCreate(rowTemp);
+    // }
+    
+    // base case
+    // if (rowIndex === n) {
+    //   solutionCount++;
+    // }
 
+    // infinity loop prevention
 
+  //   if (solutionCount === 6) {
+  //     console.log('infinity loop dumbass')
+  //     return
+  //   }
+    
+  //   return solutionCount;
+  // }
 
-
-
-
-
-
-
+// coutn a solution
+// return something
 
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
@@ -145,7 +111,7 @@ window.countNRooksSolutions = function(n) {
 window.findNQueensSolution = function(n) {
   var solution = undefined; //fixme
 
-  console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
+  // console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
 };
 
@@ -154,24 +120,7 @@ window.findNQueensSolution = function(n) {
 window.countNQueensSolutions = function(n) {
   var solution = undefined; //fixme
 
-  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
+  // console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
