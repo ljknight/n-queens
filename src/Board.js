@@ -146,7 +146,6 @@
           if (this._getFirstRowColumnIndexForMajorDiagonalOn(i, k) === diagVal) {
             if (rows[i][k] === 1) {
               count++;
-              console.log(count)
             }
           }
         }
@@ -220,27 +219,3 @@
   };
 
 }());
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
