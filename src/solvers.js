@@ -32,74 +32,33 @@ window.findNRooksSolution = function(n) {
 // return the number of nxn chessboards that exist, with n rooks placed such that none of them can attack each other
 
 
-
-
-
-
-
-
 window.countNRooksSolutions = function(n) {
 
-  var chess = new Board({n:4});
+  var chess = new Board({n:n});
   var rows = chess.rows();
   var solutionCount = 0;
   var rowIndex = 0;
 
-  var rowTemp = 0;
-  var colTemp = 0;
-  var boardCreate = function(rowInput) {
-    var currentRow = chess.get(rowTemp);
+  var boardCreate = function(row) {
+    var currentRow = chess.get(row);
 
-    // adds our pieces
-    for (var row = rowTemp; row < currentRow.length; row++) {
-      for (var col = 0; col < currentRow.length; col++) {
-        if (currentRow[col] === 1) {
-          chess.togglePiece(row, col)
-        } else {
-          chess.togglePiece(row, col);
-          if (chess.hasAnyRooksConflicts()) {
-            chess.togglePiece(row, col);
-          }
-        }
-        if (solutionCount === 6) {
-          return;
-        }
-        if (row === currentRow.length-1 && col === currentRow.length-1) {
-          solutionCount++;
-          rowTemp = row-1;
-          boardCreate(rowTemp);
-        }
+    if (row === n) {
+      solutionCount++;
+      return;
+    }
+
+    for (var col = 0; col < n; col++) {
+      chess.togglePiece(row, col);
+      if (chess.hasAnyRooksConflicts()) {
+        chess.togglePiece(row, col);
+      } else {
+        boardCreate(row + 1);
+        chess.togglePiece(row, col);
       }
     }
-    return;
   }
-  boardCreate(0);
 
-    // if () {
-    //   reset rowTemp back to zero
-    // }
-    // if () {
-    //   boardCreate(rowTemp);
-    // }
-    
-    // base case
-    // if (rowIndex === n) {
-    //   solutionCount++;
-    // }
-
-    // infinity loop prevention
-
-  //   if (solutionCount === 6) {
-  //     console.log('infinity loop dumbass')
-  //     return
-  //   }
-    
-  //   return solutionCount;
-  // }
-
-// coutn a solution
-// return something
-
+  boardCreate(rowIndex);
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
