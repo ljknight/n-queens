@@ -72,6 +72,9 @@ window.findNQueensSolution = function(n) {
 
   var boardCreate = function(row) {
     if (row === n) {
+      // chess is being cleared each time we untoggle
+      // so we need to copy chess over into a new empty array
+      // so that we can return solution
       for (var i = 0; i < solution.length; i++) {
         solution[i] = chess.rows()[i].slice()
       };
