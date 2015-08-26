@@ -18,7 +18,7 @@ window.findNRooksSolution = function(n) {
 
   for (var row = 0; row < solution.length; row++) {
     for (var col = 0; col < solution[row].length; col++) {
-      solution[row][col] = 1;
+      chess.togglePiece(row, col);
       if (chess.hasAnyRooksConflicts()) {
         chess.togglePiece(row, col)
       }
@@ -37,28 +37,26 @@ window.countNRooksSolutions = function(n) {
   var chess = new Board({n:n});
   var rows = chess.rows();
   var solutionCount = 0;
-  var rowIndex = 0;
 
   var boardCreate = function(row) {
-    var currentRow = chess.get(row);
-
     if (row === n) {
       solutionCount++;
       return;
     }
-
     for (var col = 0; col < n; col++) {
       chess.togglePiece(row, col);
-      if (chess.hasAnyRooksConflicts()) {
-        chess.togglePiece(row, col);
-      } else {
+      if (!chess.hasAnyRooksConflicts()) {
         boardCreate(row + 1);
+      } // } else {
+        // boardCreate(row + 1);
         chess.togglePiece(row, col);
-      }
+        // below will remove the last piece and allow it to go back up
+        // make one choice at the beginning - recurse (go down the tree), then undo the last choice (to allow you to go back up)
+        // chess.togglePiece(row, col);
+      // }
     }
   }
-
-  boardCreate(rowIndex);
+  boardCreate(0);
 
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
@@ -68,18 +66,64 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  var solution = undefined; //fixme
+  
+  var chess = new Board({n:n});
+  var solution = chess.rows();
 
-  // console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
+  var boardCreate = function(row) {
+    if (row === n) {
+      for (var i = 0; i < solution.length; i++) {
+        solution[i] = chess.rows()[i].slice()
+      };
+      return;
+    } else {
+      for (var col = 0; col < n; col++) {
+        chess.togglePiece(row, col);
+        if (chess.hasAnyQueenConflictsOn(row, col)) {
+          chess.togglePiece(row, col);
+        } else {
+          boardCreate(row + 1);
+          chess.togglePiece(row, col);
+        }
+      }
+    }
+  }
+  boardCreate(0);
+
+
+  console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
 };
 
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solution = undefined; //fixme
+  
+  var chess = new Board({n:n});
+  var rows = chess.rows();
+  var solutionCount = 0;
 
-  // console.log('Number of solutions for ' + n + ' queens:', solutionCount);
+  var boardCreate = function(row) {
+    if (row === n) {
+      solutionCount++;
+      return;
+    }
+    for (var col = 0; col < n; col++) {
+      chess.togglePiece(row, col);
+      if (!chess.hasAnyQueenConflictsOn(row, col)) {
+        boardCreate(row + 1);
+      } // } else {
+        // boardCreate(row + 1);
+        chess.togglePiece(row, col);
+        // below will remove the last piece and allow it to go back up
+        // make one choice at the beginning - recurse (go down the tree), then undo the last choice (to allow you to go back up)
+        // chess.togglePiece(row, col);
+      // }
+    }
+  }
+  boardCreate(0);
+
+  console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
 };
 
